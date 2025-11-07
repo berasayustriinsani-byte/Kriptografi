@@ -1,0 +1,97 @@
+# ==============================
+# Program Vigenere Cipher (Enkripsi & Dekripsi)
+# Menggunakan Prinsip PBO
+# ==============================
+
+class VigenereCipher:
+    def __init__(self, key):
+        self.key = key.upper()
+
+    def _format_key(self, text):
+        key_repeated = ""
+        key_index = 0
+        for char in text:
+            if char.isalpha():
+                key_repeated += self.key[key_index % len(self.key)]
+                key_index += 1
+            else:
+                key_repeated += char
+        return key_repeated
+
+    def encrypt(self, plaintext):
+        plaintext = plaintext.upper()
+        key = self._format_key(plaintext)
+        ciphertext = ""
+        print("=== PROSES ENKRIPSI ===")
+        print(f"Plaintext : {plaintext}")
+        print(f"Key       : {key}")
+        print("--------------------------")
+
+        for p, k in zip(plaintext, key):
+            if p.isalpha():
+                c = chr(((ord(p) - 65 + ord(k) - 65) % 26) + 65)
+                print(f"{p} + {k} -> {c}  ( ({ord(p)-65}+{ord(k)-65})%26 = {(ord(p)-65+ord(k)-65)%26} )")
+            else:
+                c = p
+            ciphertext += c
+
+        print("--------------------------")
+        print(f"Ciphertext: {ciphertext}")
+        return ciphertext
+
+    def decrypt(self, ciphertext):
+        ciphertext = ciphertext.upper()
+        key = self._format_key(ciphertext)
+        plaintext = ""
+        print("=== PROSES DEKRIPSI ===")
+        print(f"Ciphertext: {ciphertext}")
+        print(f"Key       : {key}")
+        print("--------------------------")
+
+        for c, k in zip(ciphertext, key):
+            if c.isalpha():
+                p = chr(((ord(c) - 65 - (ord(k) - 65)) % 26) + 65)
+                print(f"{c} - {k} -> {p}  ( ({ord(c)-65}-{ord(k)-65})%26 = {(ord(c)-65-(ord(k)-65))%26} )")
+            else:
+                p = c
+            plaintext += p
+
+        print("--------------------------")
+        print(f"Plaintext: {plaintext}")
+        return plaintext
+
+
+# ==============================
+# MAIN PROGRAM
+# ==============================
+def main():
+    print("=== PROGRAM VIGENERE CIPHER ===")
+    key = input("Masukkan KEY: ")
+    cipher = VigenereCipher(key)
+
+    while True:
+        print("\nMenu:")
+        print("1. Enkripsi")
+        print("2. Dekripsi")
+        print("3. Keluar")
+        pilihan = input("Pilih (1/2/3): ")
+
+        if pilihan == "1":
+            teks = input("Masukkan plaintext: ")
+            hasil = cipher.encrypt(teks)
+            print(f"\nHasil Enkripsi: {hasil}")
+
+        elif pilihan == "2":
+            teks = input("Masukkan ciphertext: ")
+            hasil = cipher.decrypt(teks)
+            print(f"\nHasil Dekripsi: {hasil}")
+
+        elif pilihan == "3":
+            print("Program selesai.")
+            break
+        else:
+            print("Pilihan tidak valid!")
+
+
+if __name__ == "__main__":
+    main()
